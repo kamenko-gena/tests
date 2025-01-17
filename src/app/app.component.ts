@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TuiCalendarModule, TuiRootModule } from '@taiga-ui/core';
+import { TuiButtonModule, TuiRootModule } from '@taiga-ui/core';
 
 @Component({
     standalone: true,
-    imports: [RouterModule, TuiRootModule, TuiCalendarModule],
+    imports: [RouterModule, TuiRootModule, TuiButtonModule],
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrl: './app.component.less',
