@@ -4,14 +4,20 @@
   "plugins": ["@nx"],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nx/javascript"],
-      "rules": {}
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript", "plugin:@nx/typescript"],
+      "rules": {
+        "prettier/prettier": [
+          "error",
+          {
+              "endOfLine": "auto",
+              "tabWidth": 4,
+              "semi": true,
+              "singleQuote": true,
+              "bracketSpacing": true
+          }
+        ]
+      }
     },
     {
       "files": ["*.ts"],
@@ -41,7 +47,18 @@
     {
       "files": ["*.html"],
       "extends": ["plugin:@nx/angular-template"],
-      "rules": {}
+      
+      "rules": {
+        "prettier/prettier": [
+          "error",
+          {
+              "tabWidth": 4,
+              "endOfLine": "auto",
+              "parser": "html"
+          }
+      ]
+      }
     }
-  ]
+  ],
+  "extends": ["plugin:prettier/recommended"]
 }
