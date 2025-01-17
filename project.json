@@ -14,6 +14,7 @@
         "index": "./src/index.html",
         "main": "./src/main.ts",
         "polyfills": ["zone.js"],
+        "baseHref": "/tests/",
         "tsConfig": "tsconfig.app.json",
         "inlineStyleLanguage": "less",
         "assets": [
@@ -22,7 +23,10 @@
             "input": "public"
           }
         ],
-        "styles": ["./src/styles.less"],
+        "styles": [
+          "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+	        "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
+          "./src/styles.less"],
         "scripts": []
       },
       "configurations": {
