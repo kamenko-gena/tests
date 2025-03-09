@@ -8,11 +8,36 @@ import { QuestionInterface } from 'src/app/interfaces/question-interface';
 })
 export class FirebaseService {
     private readonly firestore = inject(Firestore);
-    private readonly mhsQuestionsCollect = collection(this.firestore, 'mhs');
+    private readonly mhsToQuestionsCollect = collection(
+        this.firestore,
+        'mhs-TO',
+    );
+    private readonly mhsMontazhQuestionsCollect = collection(
+        this.firestore,
+        'mhs-montazh',
+    );
 
-    getMhsQuestions(): Observable<QuestionInterface[]> {
-        return collectionData(this.mhsQuestionsCollect, {
+    getMhsToQuestions(): Observable<QuestionInterface[]> {
+        return collectionData(this.mhsToQuestionsCollect, {
+            idField: 'id',
+        }) as Observable<QuestionInterface[]>;
+    }
+
+    getMhsMontazhQuestions(): Observable<QuestionInterface[]> {
+        return collectionData(this.mhsMontazhQuestionsCollect, {
             idField: 'id',
         }) as Observable<QuestionInterface[]>;
     }
 }
+
+//Отправка вопросов
+// addMhsToQuestions(): Observable<string> {
+//     for (const data of this.questionsDataTo) {
+//         setTimeout(() => {
+//             addDoc(this.mhsToQuestionsCollect, data).catch((err) =>
+//                 console.log('Ошибка: ', err),
+//             );
+//         }, 500);
+//     }
+//     return of('Начало отправки');
+// }

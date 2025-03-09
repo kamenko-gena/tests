@@ -1,0 +1,19 @@
+<p>mhs-to-questions works!</p>
+
+<button tuiButton (click)="getToQuestions()">Show To Question</button>
+<button routerLink="/" tuiButton>Главное меню</button>
+
+<div class="container">
+    @if (questionsForShow()){
+    <ul>
+        <li>{{questionsForShow()?.question}}</li>
+        <ul>
+            <li>{{questionsForShow()?.answers?.a}}</li>
+            <li>{{questionsForShow()?.answers?.b}}</li>
+            <li>{{questionsForShow()?.answers?.c}}</li>
+        </ul>
+        <li>{{questionsForShow()?.description}}</li>
+        <li>{{questionsForShow()?.correctAnswer}}</li>
+    </ul>
+    }
+</div>

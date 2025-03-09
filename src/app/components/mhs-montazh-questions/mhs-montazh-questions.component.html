@@ -1,0 +1,24 @@
+<p>mhs-montazh-questions works!</p>
+
+<button tuiButton (click)="getMontazhQuestions()">Show Montazh Question</button>
+<button routerLink="/" tuiButton>Главное меню</button>
+
+<div class="container">
+    @if (questionsForShow()){
+    <ul>
+        <li>{{questionsForShow()?.question}}</li>
+        <tui-radio-labeled [formControl]="userAnswer" size="l" item="a">
+            {{questionsForShow()?.answers?.a}}
+        </tui-radio-labeled>
+        <tui-radio-labeled [formControl]="userAnswer" size="l" item="b">
+            {{questionsForShow()?.answers?.b}}
+        </tui-radio-labeled>
+        <tui-radio-labeled [formControl]="userAnswer" size="l" item="c">
+            {{questionsForShow()?.answers?.c}}
+        </tui-radio-labeled>
+        <li>{{questionsForShow()?.description}}</li>
+        <li>{{questionsForShow()?.correctAnswer}}</li>
+    </ul>
+
+    }
+</div>
