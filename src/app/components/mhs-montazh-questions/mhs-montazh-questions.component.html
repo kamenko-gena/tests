@@ -1,24 +1,57 @@
 <p>mhs-montazh-questions works!</p>
 
-<button tuiButton (click)="getMontazhQuestions()">Show Montazh Question</button>
+<button tuiButton (click)="startMontazhQuestions()">Все вопросы</button>
 <button routerLink="/" tuiButton>Главное меню</button>
 
 <div class="container">
     @if (questionsForShow()){
-    <ul>
-        <li>{{questionsForShow()?.question}}</li>
-        <tui-radio-labeled [formControl]="userAnswer" size="l" item="a">
-            {{questionsForShow()?.answers?.a}}
+    <p>Вопрос: {{count+1}} из {{questionsMhsMontazh.length}}</p>
+    <h3>{{questionsForShow()?.question}}</h3>
+    <div class="answers">
+        <tui-radio-labeled [formControl]="userAnswer" size="m" item="a">
+            a: {{questionsForShow()?.answers?.a}}
         </tui-radio-labeled>
-        <tui-radio-labeled [formControl]="userAnswer" size="l" item="b">
-            {{questionsForShow()?.answers?.b}}
+        <tui-radio-labeled [formControl]="userAnswer" size="m" item="b">
+            b: {{questionsForShow()?.answers?.b}}
         </tui-radio-labeled>
-        <tui-radio-labeled [formControl]="userAnswer" size="l" item="c">
-            {{questionsForShow()?.answers?.c}}
+        <tui-radio-labeled [formControl]="userAnswer" size="m" item="c">
+            c: {{questionsForShow()?.answers?.c}}
         </tui-radio-labeled>
-        <li>{{questionsForShow()?.description}}</li>
-        <li>{{questionsForShow()?.correctAnswer}}</li>
-    </ul>
+    </div>
+
+    <div class="buttons-container">
+        <div class="arrow-buttons-container">
+            <button
+                [disabled]="count <= 0"
+                appearance="icon"
+                icon="tuiIconArrowLeft"
+                tuiButton
+                type="button"
+                (click)="showQuestionByNumber(count-1)"
+            >
+                Назад
+            </button>
+
+            <button
+                appearance="icon"
+                iconRight="tuiIconArrowRight"
+                tuiButton
+                type="button"
+                (click)="showQuestionByNumber(count+1)"
+            >
+                Далее
+            </button>
+        </div>
+
+        <button
+            size="m"
+            [disabled]="userAnswer.status === 'DISABLED'"
+            tuiButton
+            (click)="showResult(questionsForShow()?.correctAnswer??'')"
+        >
+            Ответ
+        </button>
+    </div>
 
     }
 </div>

@@ -30,9 +30,9 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class MhsMontazhQuestionsComponent implements OnInit {
     private readonly firebase = inject(FirebaseService);
-    private questionsMhsMontazh: QuestionInterface[] = [];
+    questionsMhsMontazh: QuestionInterface[] = [];
     readonly questionsForShow = signal<QuestionInterface | null>(null);
-    private count = 1;
+    count = 0;
 
     readonly userAnswer = new FormControl<string>('a', {
         nonNullable: true,
@@ -46,8 +46,26 @@ export class MhsMontazhQuestionsComponent implements OnInit {
             .subscribe((next) => (this.questionsMhsMontazh = next));
     }
 
-    getMontazhQuestions(): void {
+    startMontazhQuestions(): void {
+        this.userAnswer.enable();
+        this.questionsForShow.set(this.questionsMhsMontazh[0]);
+        this.count = 0;
+    }
+
+    showResult(correctAnswer: string): void {
+        this.userAnswer.disable();
+        console.log('Правильный ответ: ', correctAnswer);
+        console.log('Вы ответили: ', this.userAnswer.value);
+        if (this.userAnswer.value === correctAnswer) {
+            console.log('Вы ответили верно!');
+        } else {
+            console.log('Вы ответили не верно! Верный ответ: ', correctAnswer);
+        }
+    }
+
+    showQuestionByNumber(questionNum: number): void {
+        this.count = questionNum;
         this.questionsForShow.set(this.questionsMhsMontazh[this.count]);
-        ++this.count;
+        this.userAnswer.enable();
     }
 }
