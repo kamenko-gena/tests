@@ -1,3 +1,4 @@
+import { provideAnimations } from '@angular/platform-browser/animations';
 import {
     ApplicationConfig,
     importProvidersFrom,
@@ -21,6 +22,7 @@ const firebaseConfig = {
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        provideAnimations(),
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(appRoutes),
         provideFirebaseApp(() => initializeApp(firebaseConfig)),
