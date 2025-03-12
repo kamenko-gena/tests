@@ -1,12 +1,15 @@
-<p>mhs-montazh-questions works!</p>
+<h3>Вопросы МЧС. Монтаж и наладка ПА</h3>
 
 <button tuiButton (click)="startMontazhQuestions()">Все вопросы</button>
-<button routerLink="/" tuiButton>Главное меню</button>
 
 <div class="container">
     @if (questionsForShow()){
-    <p>Вопрос: {{count+1}} из {{questionsMhsMontazh.length}}</p>
+    <p>Вопрос: {{currentNum+1}} из {{questionsMhsMontazh.length}}</p>
     <h3>{{questionsForShow()?.question}}</h3>
+    <tui-expand class="error-expand" [expanded]="showErrorExpand">
+        <h5>Неправильно!</h5>
+        <p>{{questionsForShow()?.description}}</p>
+    </tui-expand>
     <div class="answers">
         <tui-radio-labeled [formControl]="userAnswer" size="m" item="a">
             a: {{questionsForShow()?.answers?.a}}
@@ -22,34 +25,48 @@
     <div class="buttons-container">
         <div class="arrow-buttons-container">
             <button
-                [disabled]="count <= 0"
-                appearance="icon"
+                [disabled]="currentNum <= 0"
+                appearance="flat"
                 icon="tuiIconArrowLeft"
                 tuiButton
                 type="button"
-                (click)="showQuestionByNumber(count-1)"
+                (click)="showQuestionByNumber(currentNum-1)"
             >
                 Назад
             </button>
 
             <button
-                appearance="icon"
+                [disabled]="currentNum === questionsMhsMontazh.length - 1"
+                appearance="flat"
                 iconRight="tuiIconArrowRight"
                 tuiButton
                 type="button"
-                (click)="showQuestionByNumber(count+1)"
+                (click)="showQuestionByNumber(currentNum+1)"
             >
                 Далее
             </button>
         </div>
 
         <button
-            size="m"
+            appearance="accent"
             [disabled]="userAnswer.status === 'DISABLED'"
             tuiButton
-            (click)="showResult(questionsForShow()?.correctAnswer??'')"
+            (click)="showResult((questionsForShow()?.correctAnswer??''), currentNum)"
         >
             Ответ
+        </button>
+    </div>
+    <div class="footer-buttons">
+        <button
+            (click)=" resetDataQuestions()"
+            appearance="outline"
+            size="m"
+            tuiButton
+        >
+            Заново
+        </button>
+        <button appearance="outline" size="m" routerLink="/" tuiButton>
+            Главное меню
         </button>
     </div>
 
