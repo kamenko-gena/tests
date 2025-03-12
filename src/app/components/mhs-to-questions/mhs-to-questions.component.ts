@@ -10,31 +10,36 @@ import { QuestionInterface } from 'src/app/interfaces/question-interface';
 import { FirebaseService } from 'src/app/services/firebase-service/firebase.service';
 import { take } from 'rxjs';
 import { TuiButtonModule } from '@taiga-ui/core';
-import { RouterLink } from '@angular/router';
+import { ExamAreaComponent } from '../exam-area/exam-area.component';
 
 @Component({
     selector: 'app-mhs-to-questions',
     standalone: true,
-    imports: [CommonModule, TuiButtonModule, RouterLink],
+    imports: [CommonModule, TuiButtonModule, ExamAreaComponent],
     templateUrl: './mhs-to-questions.component.html',
     styleUrl: './mhs-to-questions.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MhsToQuestionsComponent implements OnInit {
+    readonly showAllTO = signal<boolean>(false);
+    readonly setLoading = signal<boolean>(false);
     private readonly firebase = inject(FirebaseService);
-    private questionsMhsTo: QuestionInterface[] = [];
-    readonly questionsForShow = signal<QuestionInterface | null>(null);
-    private count = 1;
+    questionsMhsTO: QuestionInterface[] = [];
 
     ngOnInit(): void {
+        this.setLoading.set(true);
         this.firebase
-            .getMhsToQuestions()
+            .getMhsTOQuestions()
             .pipe(take(1))
-            .subscribe((next) => (this.questionsMhsTo = next));
+            .subscribe({
+                next: (next) => (this.questionsMhsTO = next),
+                complete: () => {
+                    this.setLoading.set(false);
+                },
+            });
     }
 
-    getToQuestions(): void {
-        this.questionsForShow.set(this.questionsMhsTo[this.count]);
-        ++this.count;
+    startTOQuestions(): void {
+        this.showAllTO.set(true);
     }
 }

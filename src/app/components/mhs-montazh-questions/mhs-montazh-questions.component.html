@@ -1,74 +1,15 @@
 <h3>Вопросы МЧС. Монтаж и наладка ПА</h3>
 
-<button tuiButton (click)="startMontazhQuestions()">Все вопросы</button>
-
-<div class="container">
-    @if (questionsForShow()){
-    <p>Вопрос: {{currentNum+1}} из {{questionsMhsMontazh.length}}</p>
-    <h3>{{questionsForShow()?.question}}</h3>
-    <tui-expand class="error-expand" [expanded]="showErrorExpand">
-        <h5>Неправильно!</h5>
-        <p>{{questionsForShow()?.description}}</p>
-    </tui-expand>
-    <div class="answers">
-        <tui-radio-labeled [formControl]="userAnswer" size="m" item="a">
-            a: {{questionsForShow()?.answers?.a}}
-        </tui-radio-labeled>
-        <tui-radio-labeled [formControl]="userAnswer" size="m" item="b">
-            b: {{questionsForShow()?.answers?.b}}
-        </tui-radio-labeled>
-        <tui-radio-labeled [formControl]="userAnswer" size="m" item="c">
-            c: {{questionsForShow()?.answers?.c}}
-        </tui-radio-labeled>
-    </div>
-
-    <div class="buttons-container">
-        <div class="arrow-buttons-container">
-            <button
-                [disabled]="currentNum <= 0"
-                appearance="flat"
-                icon="tuiIconArrowLeft"
-                tuiButton
-                type="button"
-                (click)="showQuestionByNumber(currentNum-1)"
-            >
-                Назад
-            </button>
-
-            <button
-                [disabled]="currentNum === questionsMhsMontazh.length - 1"
-                appearance="flat"
-                iconRight="tuiIconArrowRight"
-                tuiButton
-                type="button"
-                (click)="showQuestionByNumber(currentNum+1)"
-            >
-                Далее
-            </button>
-        </div>
-
-        <button
-            appearance="accent"
-            [disabled]="userAnswer.status === 'DISABLED'"
-            tuiButton
-            (click)="showResult((questionsForShow()?.correctAnswer??''), currentNum)"
-        >
-            Ответ
-        </button>
-    </div>
-    <div class="footer-buttons">
-        <button
-            (click)=" resetDataQuestions()"
-            appearance="outline"
-            size="m"
-            tuiButton
-        >
-            Заново
-        </button>
-        <button appearance="outline" size="m" routerLink="/" tuiButton>
-            Главное меню
-        </button>
-    </div>
-
-    }
-</div>
+@if(showAllMontazh()) {
+<app-exam-area [allQuestionsData]="questionsMhsMontazh"></app-exam-area>
+} @else {
+<button
+    class="start-montazh-button"
+    [disabled]="setLoading()"
+    tuiButton
+    (click)="startMontazhQuestions()"
+    [showLoader]="setLoading()"
+>
+    Проверка знаний
+</button>
+}

@@ -17,7 +17,7 @@ export class FirebaseService {
         'mhs-montazh',
     );
 
-    getMhsToQuestions(): Observable<QuestionInterface[]> {
+    getMhsTOQuestions(): Observable<QuestionInterface[]> {
         return collectionData(this.mhsToQuestionsCollect, {
             idField: 'id',
         }) as Observable<QuestionInterface[]>;

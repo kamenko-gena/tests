@@ -1,19 +1,15 @@
-<p>mhs-to-questions works!</p>
+<h3>Вопросы МЧС. Техническое обслуживание ПА</h3>
 
-<button tuiButton (click)="getToQuestions()">Show To Question</button>
-<button routerLink="/" tuiButton>Главное меню</button>
-
-<div class="container">
-    @if (questionsForShow()){
-    <ul>
-        <li>{{questionsForShow()?.question}}</li>
-        <ul>
-            <li>{{questionsForShow()?.answers?.a}}</li>
-            <li>{{questionsForShow()?.answers?.b}}</li>
-            <li>{{questionsForShow()?.answers?.c}}</li>
-        </ul>
-        <li>{{questionsForShow()?.description}}</li>
-        <li>{{questionsForShow()?.correctAnswer}}</li>
-    </ul>
-    }
-</div>
+@if(showAllTO()) {
+<app-exam-area [allQuestionsData]="questionsMhsTO"></app-exam-area>
+} @else {
+<button
+    class="start-to-button"
+    [disabled]="setLoading()"
+    tuiButton
+    (click)="startTOQuestions()"
+    [showLoader]="setLoading()"
+>
+    Проверка знаний
+</button>
+}
