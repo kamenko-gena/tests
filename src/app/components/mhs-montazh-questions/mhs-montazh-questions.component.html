@@ -1,7 +1,10 @@
 <h3>Вопросы МЧС. Монтаж и наладка ПА</h3>
 
 @if(showAllMontazh()) {
-<app-exam-area [allQuestionsData]="questionsMhsMontazh"></app-exam-area>
+<app-exam-area
+    sectionName="montazh"
+    [allQuestionsData]="questionsMhsMontazh"
+></app-exam-area>
 } @else {
 <button
     class="start-montazh-button"

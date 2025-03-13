@@ -1,7 +1,10 @@
 <h3>Вопросы МЧС. Техническое обслуживание ПА</h3>
 
 @if(showAllTO()) {
-<app-exam-area [allQuestionsData]="questionsMhsTO"></app-exam-area>
+<app-exam-area
+    sectionName="TO"
+    [allQuestionsData]="questionsMhsTO"
+></app-exam-area>
 } @else {
 <button
     class="start-to-button"

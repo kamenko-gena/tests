@@ -1,32 +1,39 @@
 <div class="container">
     @if (questionsForShow()){
-    <div class="filters-container">
-        <tui-input-number
-            tuiTextfieldSize="s"
-            [formControl]="inputQuestionNumber"
-            (input)="setQuestionNumber()"
-            >Перейти к вопросу
-        </tui-input-number>
+    <div class="title-container">
         <p>Вопрос: {{currentNum+1}} из {{allQuestionsData.length}}</p>
+        <div class="filter-container">
+            <tui-input-number
+                class="input-number-field"
+                tuiTextfieldSize="s"
+                [formControl]="inputQuestionNumber"
+                (input)="setQuestionNumber()"
+                >Перейти к вопросу
+            </tui-input-number>
+            <tui-checkbox-labeled [formControl]="setRandom"
+                >Ранодм</tui-checkbox-labeled
+            >
+        </div>
     </div>
 
     <h3>{{questionsForShow()?.question}}</h3>
     <tui-expand class="error-expand" [expanded]="showErrorExpand()">
         <h5>Неправильно!</h5>
         <p>{{questionsForShow()?.description}}</p>
+        <tui-badge status="success" value="Верно">123</tui-badge>
     </tui-expand>
     <tui-expand class="correct-expand" [expanded]="showCorrectExpand()">
         <h5>Правильно!</h5>
     </tui-expand>
     <div class="answers">
         <tui-radio-labeled [formControl]="userAnswer" size="m" item="a">
-            a: {{questionsForShow()?.answers?.a}}
+            <span>a: {{questionsForShow()?.answers?.a}}</span>
         </tui-radio-labeled>
         <tui-radio-labeled [formControl]="userAnswer" size="m" item="b">
-            b: {{questionsForShow()?.answers?.b}}
+            <span>b: {{questionsForShow()?.answers?.b}}</span>
         </tui-radio-labeled>
         <tui-radio-labeled [formControl]="userAnswer" size="m" item="c">
-            c: {{questionsForShow()?.answers?.c}}
+            <span>c: {{questionsForShow()?.answers?.c}}</span>
         </tui-radio-labeled>
     </div>
 
@@ -64,7 +71,7 @@
             tuiButton
             (click)="showResult((questionsForShow()?.correctAnswer??''), currentNum)"
         >
-            Ответ
+            Ответить
         </button>
     </div>
     <div class="footer-buttons">

@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    inject,
     Input,
     OnInit,
     signal,
@@ -10,10 +11,16 @@ import { QuestionInterface } from 'src/app/interfaces/question-interface';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
     TuiButtonModule,
+    TuiDialogService,
     TuiExpandModule,
     TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
-import { TuiInputNumberModule, TuiRadioLabeledModule } from '@taiga-ui/kit';
+import {
+    TuiBadgeModule,
+    TuiCheckboxLabeledModule,
+    TuiInputNumberModule,
+    TuiRadioLabeledModule,
+} from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -28,6 +35,8 @@ import { RouterLink } from '@angular/router';
         TuiInputNumberModule,
         RouterLink,
         TuiExpandModule,
+        TuiCheckboxLabeledModule,
+        TuiBadgeModule,
     ],
     templateUrl: './exam-area.component.html',
     styleUrl: './exam-area.component.less',
@@ -35,26 +44,39 @@ import { RouterLink } from '@angular/router';
 })
 export class ExamAreaComponent implements OnInit {
     @Input() allQuestionsData: QuestionInterface[] = [];
+    @Input() sectionName = '';
+    private readonly dialogs = inject(TuiDialogService);
     readonly questionsForShow = signal<QuestionInterface | null>(null);
     readonly showErrorExpand = signal<boolean>(false);
     readonly showCorrectExpand = signal<boolean>(false);
-    private userQuestionNum = localStorage.getItem('currentQuestion');
-    userClosedQuestions: number[] =
-        localStorage
-            .getItem('closedQuestions')
-            ?.split(',')
-            .filter((elem) => elem !== '')
-            .map((elem) => Number(elem)) ?? [];
+    private userQuestionNum = '';
+    private userClosedQuestions: number[] = [];
+    private userCorrectAnswers = 0;
     currentNum = 0;
 
     readonly userAnswer = new FormControl<string>('a');
     readonly inputQuestionNumber = new FormControl<number | null>(null);
+    readonly setRandom = new FormControl<boolean>(false);
 
     ngOnInit(): void {
+        this.userQuestionNum =
+            localStorage.getItem(`currentQuestion-${this.sectionName}`) ?? '';
+        this.userClosedQuestions =
+            localStorage
+                .getItem(`closedQuestions-${this.sectionName}`)
+                ?.split(',')
+                .filter((elem) => elem !== '')
+                .map((elem) => Number(elem)) ?? [];
+        this.userCorrectAnswers = Number(
+            localStorage.getItem(`correctAnswers-${this.sectionName}`),
+        );
         if (this.userQuestionNum) {
             this.currentNum = Number(this.userQuestionNum);
         } else {
-            localStorage.setItem('currentQuestion', this.currentNum.toString());
+            localStorage.setItem(
+                `currentQuestion-${this.sectionName}`,
+                this.currentNum.toString(),
+            );
         }
         this.startExam();
     }
@@ -67,24 +89,51 @@ export class ExamAreaComponent implements OnInit {
             : this.userAnswer.enable();
     }
 
-    showResult(correctAnswer: string, currentQuestion: number): void {
+    showResult(correctAnswer: string, questionNum: number): void {
         this.userAnswer.disable();
-        console.log('Правильный ответ: ', correctAnswer);
-        console.log('Вы ответили: ', this.userAnswer.value);
         if (this.userAnswer.value !== correctAnswer) {
             this.showErrorExpand.set(true);
         } else {
             this.showCorrectExpand.set(true);
+            ++this.userCorrectAnswers;
+            console.log('Всего правильный ответов: ', this.userCorrectAnswers);
+            localStorage.setItem(
+                `correctAnswers-${this.sectionName}`,
+                this.userCorrectAnswers.toString(),
+            );
         }
 
-        this.userClosedQuestions = [
-            ...this.userClosedQuestions,
-            currentQuestion,
-        ];
+        this.userClosedQuestions = [...this.userClosedQuestions, questionNum];
         localStorage.setItem(
-            'closedQuestions',
+            `closedQuestions-${this.sectionName}`,
             this.userClosedQuestions.toString(),
         );
+
+        if (this.userClosedQuestions.length === this.allQuestionsData.length - 73) {
+            // Если ответили более чем на 80%
+            if (
+                (this.userCorrectAnswers * 100) /
+                    this.allQuestionsData.length >=
+                80
+            ) {
+                this.openResultPrompt(
+                    `<h3 style="color: green;">Экзамен сдан!</h3>`,
+                );
+            }
+            this.openResultPrompt(
+                `<h3 style="color: red;">Экзамен не сдан!</h3>`,
+            );
+        }
+    }
+
+    openResultPrompt(content: string): void {
+        this.dialogs
+            .open(content, {
+                label: 'Результат',
+                appearance: 'result',
+                size: 's',
+            })
+            .subscribe();
     }
 
     showQuestionByNumber(questionNum: number): void {
@@ -93,7 +142,10 @@ export class ExamAreaComponent implements OnInit {
         this.currentNum = questionNum;
         this.questionsForShow.set(this.allQuestionsData[this.currentNum]);
         if (this.userQuestionNum) {
-            localStorage.setItem('currentQuestion', this.currentNum.toString());
+            localStorage.setItem(
+                `currentQuestion-${this.sectionName}`,
+                this.currentNum.toString(),
+            );
         }
         this.userClosedQuestions.includes(this.currentNum)
             ? this.userAnswer.disable()
@@ -105,9 +157,17 @@ export class ExamAreaComponent implements OnInit {
         this.showCorrectExpand.set(false);
         this.currentNum = 0;
         this.userClosedQuestions = [];
-        localStorage.setItem('currentQuestion', this.currentNum.toString());
+        this.userCorrectAnswers = 0;
         localStorage.setItem(
-            'closedQuestions',
+            `correctAnswers-${this.sectionName}`,
+            this.userCorrectAnswers.toString(),
+        );
+        localStorage.setItem(
+            `currentQuestion-${this.sectionName}`,
+            this.currentNum.toString(),
+        );
+        localStorage.setItem(
+            `closedQuestions-${this.sectionName}`,
             this.userClosedQuestions.toString(),
         );
         this.startExam();
