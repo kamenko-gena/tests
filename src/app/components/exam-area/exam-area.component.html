@@ -1,10 +1,22 @@
 <div class="container">
     @if (questionsForShow()){
-    <p>Вопрос: {{currentNum+1}} из {{allQuestionsData.length}}</p>
+    <div class="filters-container">
+        <tui-input-number
+            tuiTextfieldSize="s"
+            [formControl]="inputQuestionNumber"
+            (input)="setQuestionNumber()"
+            >Перейти к вопросу
+        </tui-input-number>
+        <p>Вопрос: {{currentNum+1}} из {{allQuestionsData.length}}</p>
+    </div>
+
     <h3>{{questionsForShow()?.question}}</h3>
-    <tui-expand class="error-expand" [expanded]="showErrorExpand">
+    <tui-expand class="error-expand" [expanded]="showErrorExpand()">
         <h5>Неправильно!</h5>
         <p>{{questionsForShow()?.description}}</p>
+    </tui-expand>
+    <tui-expand class="correct-expand" [expanded]="showCorrectExpand()">
+        <h5>Правильно!</h5>
     </tui-expand>
     <div class="answers">
         <tui-radio-labeled [formControl]="userAnswer" size="m" item="a">
@@ -25,6 +37,7 @@
                 appearance="flat"
                 icon="tuiIconArrowLeft"
                 tuiButton
+                size="s"
                 type="button"
                 (click)="showQuestionByNumber(currentNum-1)"
             >
@@ -36,6 +49,7 @@
                 appearance="flat"
                 iconRight="tuiIconArrowRight"
                 tuiButton
+                size="s"
                 type="button"
                 (click)="showQuestionByNumber(currentNum+1)"
             >
@@ -44,6 +58,7 @@
         </div>
 
         <button
+            size="m"
             appearance="accent"
             [disabled]="userAnswer.status === 'DISABLED'"
             tuiButton
@@ -56,12 +71,12 @@
         <button
             (click)=" resetDataQuestions()"
             appearance="outline"
-            size="m"
+            size="s"
             tuiButton
         >
             Заново
         </button>
-        <button appearance="outline" size="m" routerLink="/" tuiButton>
+        <button appearance="outline" size="s" routerLink="/" tuiButton>
             Главное меню
         </button>
     </div>

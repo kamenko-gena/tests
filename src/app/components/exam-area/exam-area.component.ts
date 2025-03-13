@@ -7,9 +7,13 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuestionInterface } from 'src/app/interfaces/question-interface';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiButtonModule, TuiExpandModule } from '@taiga-ui/core';
-import { TuiRadioLabeledModule } from '@taiga-ui/kit';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+    TuiButtonModule,
+    TuiExpandModule,
+    TuiTextfieldControllerModule,
+} from '@taiga-ui/core';
+import { TuiInputNumberModule, TuiRadioLabeledModule } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -19,7 +23,9 @@ import { RouterLink } from '@angular/router';
         CommonModule,
         TuiButtonModule,
         TuiRadioLabeledModule,
+        TuiTextfieldControllerModule,
         ReactiveFormsModule,
+        TuiInputNumberModule,
         RouterLink,
         TuiExpandModule,
     ],
@@ -30,6 +36,8 @@ import { RouterLink } from '@angular/router';
 export class ExamAreaComponent implements OnInit {
     @Input() allQuestionsData: QuestionInterface[] = [];
     readonly questionsForShow = signal<QuestionInterface | null>(null);
+    readonly showErrorExpand = signal<boolean>(false);
+    readonly showCorrectExpand = signal<boolean>(false);
     private userQuestionNum = localStorage.getItem('currentQuestion');
     userClosedQuestions: number[] =
         localStorage
@@ -37,13 +45,10 @@ export class ExamAreaComponent implements OnInit {
             ?.split(',')
             .filter((elem) => elem !== '')
             .map((elem) => Number(elem)) ?? [];
-    showErrorExpand = false;
     currentNum = 0;
 
-    readonly userAnswer = new FormControl<string>('a', {
-        nonNullable: true,
-        validators: [Validators.required],
-    });
+    readonly userAnswer = new FormControl<string>('a');
+    readonly inputQuestionNumber = new FormControl<number | null>(null);
 
     ngOnInit(): void {
         if (this.userQuestionNum) {
@@ -67,7 +72,9 @@ export class ExamAreaComponent implements OnInit {
         console.log('Правильный ответ: ', correctAnswer);
         console.log('Вы ответили: ', this.userAnswer.value);
         if (this.userAnswer.value !== correctAnswer) {
-            this.showErrorExpand = true;
+            this.showErrorExpand.set(true);
+        } else {
+            this.showCorrectExpand.set(true);
         }
 
         this.userClosedQuestions = [
@@ -81,7 +88,8 @@ export class ExamAreaComponent implements OnInit {
     }
 
     showQuestionByNumber(questionNum: number): void {
-        this.showErrorExpand = false;
+        this.showErrorExpand.set(false);
+        this.showCorrectExpand.set(false);
         this.currentNum = questionNum;
         this.questionsForShow.set(this.allQuestionsData[this.currentNum]);
         if (this.userQuestionNum) {
@@ -93,6 +101,8 @@ export class ExamAreaComponent implements OnInit {
     }
 
     resetDataQuestions(): void {
+        this.showErrorExpand.set(false);
+        this.showCorrectExpand.set(false);
         this.currentNum = 0;
         this.userClosedQuestions = [];
         localStorage.setItem('currentQuestion', this.currentNum.toString());
@@ -101,5 +111,18 @@ export class ExamAreaComponent implements OnInit {
             this.userClosedQuestions.toString(),
         );
         this.startExam();
+    }
+
+    setQuestionNumber(): void {
+        let question = this.inputQuestionNumber.value;
+        if (!question) {
+            return;
+        }
+        if (question - 1 <= 0) {
+            question = 1;
+        } else if (question - 1 >= this.allQuestionsData.length) {
+            question = this.allQuestionsData.length;
+        }
+        this.showQuestionByNumber(question - 1);
     }
 }
