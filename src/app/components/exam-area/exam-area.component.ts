@@ -57,13 +57,12 @@ export class ExamAreaComponent implements OnInit {
     readonly showErrorExpand = signal<boolean>(false);
     readonly showCorrectExpand = signal<boolean>(false);
     private userQuestionNum = '';
-    private userClosedQuestions: number[] = [];
+    private userClosedQuestions: string[] = [];
     userCorrectAnswers = 0;
     currentNum = 0;
 
     readonly userAnswer = new FormControl<string>('a');
     readonly inputQuestionNumber = new FormControl<number | null>(null);
-    readonly setRandom = new FormControl<boolean>(false);
 
     ngOnInit(): void {
         this.userQuestionNum =
@@ -72,8 +71,7 @@ export class ExamAreaComponent implements OnInit {
             localStorage
                 .getItem(`closedQuestions-${this.sectionName}`)
                 ?.split(',')
-                .filter((elem) => elem !== '')
-                .map((elem) => Number(elem)) ?? [];
+                .filter((elem) => elem !== '') ?? [];
         this.userCorrectAnswers = Number(
             localStorage.getItem(`correctAnswers-${this.sectionName}`),
         );
@@ -86,15 +84,14 @@ export class ExamAreaComponent implements OnInit {
             );
         }
         this.startExam();
-        console.log(this.allQuestionsData);
-        this.allQuestionsData.sort(() => Math.random() - 0.5);
-        console.log(this.allQuestionsData);
     }
 
     startExam(): void {
         this.userAnswer.enable();
         this.questionsForShow.set(this.allQuestionsData[this.currentNum]);
-        this.userClosedQuestions.includes(this.currentNum)
+        this.userClosedQuestions.includes(
+            this.allQuestionsData[this.currentNum].id,
+        )
             ? this.userAnswer.disable()
             : this.userAnswer.enable();
     }
@@ -112,16 +109,16 @@ export class ExamAreaComponent implements OnInit {
             );
         }
 
-        this.userClosedQuestions = [...this.userClosedQuestions, questionNum];
+        this.userClosedQuestions = [
+            ...this.userClosedQuestions,
+            this.allQuestionsData[questionNum].id,
+        ];
         localStorage.setItem(
             `closedQuestions-${this.sectionName}`,
             this.userClosedQuestions.toString(),
         );
 
-        if (
-            this.userClosedQuestions.length ===
-            this.allQuestionsData.length - 73
-        ) {
+        if (this.userClosedQuestions.length === this.allQuestionsData.length) {
             // Если ответили более чем на 80%
             (this.userCorrectAnswers * 100) / this.allQuestionsData.length >= 80
                 ? this.openResultNotification(
@@ -154,7 +151,9 @@ export class ExamAreaComponent implements OnInit {
                 this.currentNum.toString(),
             );
         }
-        this.userClosedQuestions.includes(this.currentNum)
+        this.userClosedQuestions.includes(
+            this.allQuestionsData[this.currentNum].id,
+        )
             ? this.userAnswer.disable()
             : this.userAnswer.enable();
     }
@@ -182,6 +181,17 @@ export class ExamAreaComponent implements OnInit {
             .open('Список ваших ответов пуст.', {
                 label: 'Успешно!',
                 status: 'success',
+            })
+            .pipe(take(1))
+            .subscribe();
+    }
+
+    shuffleQuestions(): void {
+        this.allQuestionsData.sort(() => Math.random() - 0.5);
+        this.alert
+            .open('Порядок вопросов изменен!', {
+                label: 'Успешно!',
+                status: 'info',
             })
             .pipe(take(1))
             .subscribe();

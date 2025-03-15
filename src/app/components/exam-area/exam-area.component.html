@@ -1,7 +1,15 @@
 <div class="container">
     @if (questionsForShow()){
     <div class="title-container">
-        <p>Вопрос: {{currentNum+1}} из {{allQuestionsData.length}}</p>
+        <button
+            tuiButton
+            appearance="outline"
+            size="s"
+            (click)="shuffleQuestions()"
+        >
+            Перемешать вопросы
+        </button>
+
         <div class="filter-container">
             <tui-input-number
                 class="input-number-field"
@@ -10,11 +18,9 @@
                 (input)="setQuestionNumber()"
                 >Перейти к вопросу
             </tui-input-number>
-            <tui-checkbox-labeled [formControl]="setRandom"
-                >Случайный порядок вопросов</tui-checkbox-labeled
-            >
         </div>
     </div>
+    <p>Вопрос: {{currentNum+1}} из {{allQuestionsData.length}}</p>
 
     <h3>{{questionsForShow()?.question}}</h3>
     <tui-expand class="error-expand" [expanded]="showErrorExpand()">
