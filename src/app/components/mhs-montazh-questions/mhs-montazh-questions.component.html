@@ -1,0 +1,18 @@
+<h3>Вопросы МЧС. Монтаж и наладка ПА</h3>
+
+@if(showAllMontazh()) {
+<app-exam-area
+    sectionName="montazh"
+    [allQuestionsData]="questionsMhsMontazh"
+></app-exam-area>
+} @else {
+<button
+    class="start-montazh-button"
+    [disabled]="setLoading()"
+    tuiButton
+    (click)="startMontazhQuestions()"
+    [showLoader]="setLoading()"
+>
+    Проверка знаний
+</button>
+}

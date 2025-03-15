@@ -1,0 +1,121 @@
+<div class="container">
+    @if (questionsForShow()){
+    <div class="title-container">
+        <button
+            tuiButton
+            appearance="outline"
+            size="s"
+            (click)="shuffleQuestions()"
+        >
+            Перемешать вопросы
+        </button>
+
+        <div class="filter-container">
+            <tui-input-number
+                class="input-number-field"
+                tuiTextfieldSize="s"
+                [formControl]="inputQuestionNumber"
+                (input)="setQuestionNumber()"
+                >Перейти к вопросу
+            </tui-input-number>
+        </div>
+    </div>
+    <p>Вопрос: {{currentNum+1}} из {{allQuestionsData.length}}</p>
+
+    <h3>{{questionsForShow()?.question}}</h3>
+    <tui-expand class="error-expand" [expanded]="showErrorExpand()">
+        <h5>Неправильно!</h5>
+        <p>{{questionsForShow()?.description}}</p>
+    </tui-expand>
+    <tui-expand class="correct-expand" [expanded]="showCorrectExpand()">
+        <h5>Правильно!</h5>
+    </tui-expand>
+    <div class="answers">
+        <tui-radio-labeled [formControl]="userAnswer" size="m" item="a">
+            <span>a: {{questionsForShow()?.answers?.a}}</span>
+        </tui-radio-labeled>
+        <tui-radio-labeled [formControl]="userAnswer" size="m" item="b">
+            <span>b: {{questionsForShow()?.answers?.b}}</span>
+        </tui-radio-labeled>
+        <tui-radio-labeled [formControl]="userAnswer" size="m" item="c">
+            <span>c: {{questionsForShow()?.answers?.c}}</span>
+        </tui-radio-labeled>
+    </div>
+
+    <div class="buttons-container">
+        <div class="arrow-buttons-container">
+            <button
+                [disabled]="currentNum <= 0"
+                appearance="flat"
+                icon="tuiIconArrowLeft"
+                tuiButton
+                size="s"
+                type="button"
+                (click)="showQuestionByNumber(currentNum-1)"
+            >
+                Назад
+            </button>
+
+            <button
+                [disabled]="currentNum === allQuestionsData.length - 1"
+                appearance="flat"
+                iconRight="tuiIconArrowRight"
+                tuiButton
+                size="s"
+                type="button"
+                (click)="showQuestionByNumber(currentNum+1)"
+            >
+                Далее
+            </button>
+        </div>
+
+        <button
+            size="m"
+            appearance="accent"
+            [disabled]="userAnswer.status === 'DISABLED'"
+            tuiButton
+            (click)="answer((questionsForShow()?.correctAnswer??''), currentNum)"
+        >
+            Ответить
+        </button>
+    </div>
+    <div class="footer-buttons">
+        <button
+            (click)=" resetDataQuestions()"
+            appearance="outline"
+            size="s"
+            tuiButton
+        >
+            Заново
+        </button>
+        <button appearance="outline" size="s" routerLink="/" tuiButton>
+            Главное меню
+        </button>
+    </div>
+
+    }
+</div>
+
+<ng-template #ExamFailed>
+    <tui-badge
+        class="faild-badge-title"
+        status="custom"
+        value="😔 Экзамен не сдан!"
+    ></tui-badge>
+    <div>
+        Вы ответили на <b>{{userCorrectAnswers}}</b> вопрос(ов) из
+        <b>{{allQuestionsData.length}}</b>
+    </div>
+</ng-template>
+
+<ng-template #ExamPassed>
+    <tui-badge
+        class="passed-badge-title"
+        status="custom"
+        value="😎 Экзамен сдан!"
+    ></tui-badge>
+    <div>
+        Вы ответили на <b>{{userCorrectAnswers}}</b> вопрос(ов) из
+        <b>{{allQuestionsData.length}}</b>
+    </div>
+</ng-template>
