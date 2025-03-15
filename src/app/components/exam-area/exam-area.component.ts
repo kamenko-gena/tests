@@ -1,15 +1,18 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     inject,
     Input,
     OnInit,
     signal,
+    ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuestionInterface } from 'src/app/interfaces/question-interface';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
+    TuiAlertService,
     TuiButtonModule,
     TuiDialogService,
     TuiExpandModule,
@@ -22,6 +25,7 @@ import {
     TuiRadioLabeledModule,
 } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'app-exam-area',
@@ -45,13 +49,16 @@ import { RouterLink } from '@angular/router';
 export class ExamAreaComponent implements OnInit {
     @Input() allQuestionsData: QuestionInterface[] = [];
     @Input() sectionName = '';
+    @ViewChild('ExamFailed') examFailed: ElementRef | undefined;
+    @ViewChild('ExamPassed') examPassed: ElementRef | undefined;
     private readonly dialogs = inject(TuiDialogService);
+    private readonly alert = inject(TuiAlertService);
     readonly questionsForShow = signal<QuestionInterface | null>(null);
     readonly showErrorExpand = signal<boolean>(false);
     readonly showCorrectExpand = signal<boolean>(false);
     private userQuestionNum = '';
     private userClosedQuestions: number[] = [];
-    private userCorrectAnswers = 0;
+    userCorrectAnswers = 0;
     currentNum = 0;
 
     readonly userAnswer = new FormControl<string>('a');
@@ -79,6 +86,9 @@ export class ExamAreaComponent implements OnInit {
             );
         }
         this.startExam();
+        console.log(this.allQuestionsData);
+        this.allQuestionsData.sort(() => Math.random() - 0.5);
+        console.log(this.allQuestionsData);
     }
 
     startExam(): void {
@@ -89,14 +99,13 @@ export class ExamAreaComponent implements OnInit {
             : this.userAnswer.enable();
     }
 
-    showResult(correctAnswer: string, questionNum: number): void {
+    answer(correctAnswer: string, questionNum: number): void {
         this.userAnswer.disable();
         if (this.userAnswer.value !== correctAnswer) {
             this.showErrorExpand.set(true);
         } else {
             this.showCorrectExpand.set(true);
             ++this.userCorrectAnswers;
-            console.log('Всего правильный ответов: ', this.userCorrectAnswers);
             localStorage.setItem(
                 `correctAnswers-${this.sectionName}`,
                 this.userCorrectAnswers.toString(),
@@ -109,24 +118,22 @@ export class ExamAreaComponent implements OnInit {
             this.userClosedQuestions.toString(),
         );
 
-        if (this.userClosedQuestions.length === this.allQuestionsData.length - 73) {
+        if (
+            this.userClosedQuestions.length ===
+            this.allQuestionsData.length - 73
+        ) {
             // Если ответили более чем на 80%
-            if (
-                (this.userCorrectAnswers * 100) /
-                    this.allQuestionsData.length >=
-                80
-            ) {
-                this.openResultPrompt(
-                    `<h3 style="color: green;">Экзамен сдан!</h3>`,
-                );
-            }
-            this.openResultPrompt(
-                `<h3 style="color: red;">Экзамен не сдан!</h3>`,
-            );
+            (this.userCorrectAnswers * 100) / this.allQuestionsData.length >= 80
+                ? this.openResultNotification(
+                      this.examPassed ?? '<h1>Экзамен сдан!</h1>',
+                  )
+                : this.openResultNotification(
+                      this.examFailed ?? '<h1>Экзамен не сдан!</h1>',
+                  );
         }
     }
 
-    openResultPrompt(content: string): void {
+    openResultNotification(content: ElementRef | string): void {
         this.dialogs
             .open(content, {
                 label: 'Результат',
@@ -171,6 +178,13 @@ export class ExamAreaComponent implements OnInit {
             this.userClosedQuestions.toString(),
         );
         this.startExam();
+        this.alert
+            .open('Список ваших ответов пуст.', {
+                label: 'Успешно!',
+                status: 'success',
+            })
+            .pipe(take(1))
+            .subscribe();
     }
 
     setQuestionNumber(): void {
