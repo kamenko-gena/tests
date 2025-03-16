@@ -7,12 +7,21 @@
 ></app-exam-area>
 } @else {
 <button
-    class="start-montazh-button"
+    class="section-button"
     [disabled]="setLoading()"
     tuiButton
     (click)="startMontazhQuestions()"
     [showLoader]="setLoading()"
 >
     Проверка знаний
+</button>
+<button
+    class="section-button"
+    appearance="outline"
+    size="s"
+    routerLink="/"
+    tuiButton
+>
+    Главное меню
 </button>
 }

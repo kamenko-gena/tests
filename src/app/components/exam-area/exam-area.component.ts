@@ -15,7 +15,6 @@ import {
     TuiAlertService,
     TuiButtonModule,
     TuiDialogService,
-    TuiExpandModule,
     TuiTextfieldControllerModule,
 } from '@taiga-ui/core';
 import {
@@ -38,7 +37,6 @@ import { take } from 'rxjs';
         ReactiveFormsModule,
         TuiInputNumberModule,
         RouterLink,
-        TuiExpandModule,
         TuiCheckboxLabeledModule,
         TuiBadgeModule,
     ],

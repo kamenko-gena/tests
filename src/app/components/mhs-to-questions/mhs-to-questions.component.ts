@@ -11,11 +11,12 @@ import { FirebaseService } from 'src/app/services/firebase-service/firebase.serv
 import { take } from 'rxjs';
 import { TuiButtonModule } from '@taiga-ui/core';
 import { ExamAreaComponent } from '../exam-area/exam-area.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-mhs-to-questions',
     standalone: true,
-    imports: [CommonModule, TuiButtonModule, ExamAreaComponent],
+    imports: [CommonModule, TuiButtonModule, ExamAreaComponent, RouterLink],
     templateUrl: './mhs-to-questions.component.html',
     styleUrl: './mhs-to-questions.component.less',
     changeDetection: ChangeDetectionStrategy.OnPush,
