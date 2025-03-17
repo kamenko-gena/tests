@@ -4,6 +4,23 @@
     gap: 1em;
 }
 
+.correct-answer {
+    display: block;
+    background-color: rgb(4, 248, 4);
+    border-radius: 0.5em;
+    padding: 0.2em;
+    color: white;
+}
+
+.failed-answer {
+    display: block;
+    background-color: rgb(248, 4, 4);
+    border-radius: 0.5em;
+    padding: 0.2em;
+    color: white;
+
+}
+
 .buttons-container {
     text-align: center;
 }
@@ -12,13 +29,19 @@
     margin: 1em 0;
 }
 
+.answer-button {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .error-expand {
     color: red;
     text-align: center;
-    font-size: larger;
+    font-size: smaller;
 }
 
 .error-expand h5 {
+    font-size: larger;
     margin: 0;
 }
 
@@ -31,23 +54,27 @@
 .footer-buttons {
     margin-top: 2em;
     display: flex;
-    justify-content:space-between;
+    flex-direction: column;
+}
+
+.footer-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.main-menu-button {
+    margin: 0 auto;
 }
 
 .title-container {
     display: flex;
     justify-content: space-between;
-    text-align: center;
-}
-
-.filter-container {
-    display: flex;
     align-items: center;
-    gap: 1em;
 }
 
 .input-number-field {
-    min-width: 10vw;
+    min-width: 10em;
 }
 
 .faild-badge-title {
