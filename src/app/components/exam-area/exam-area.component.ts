@@ -8,7 +8,7 @@ import {
     signal,
     ViewChild,
 } from '@angular/core';
-import { CommonModule, NgClass } from '@angular/common';
+import { CommonModule, KeyValuePipe, NgClass } from '@angular/common';
 import { QuestionInterface } from 'src/app/interfaces/question-interface';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -25,6 +25,7 @@ import {
 } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
 import { take } from 'rxjs';
+import { RandomDataPipe } from '../pipes/random-data.pipe';
 
 @Component({
     selector: 'app-exam-area',
@@ -40,6 +41,8 @@ import { take } from 'rxjs';
         TuiCheckboxLabeledModule,
         TuiBadgeModule,
         NgClass,
+        KeyValuePipe,
+        RandomDataPipe,
     ],
     templateUrl: './exam-area.component.html',
     styleUrl: './exam-area.component.less',
@@ -61,7 +64,7 @@ export class ExamAreaComponent implements OnInit {
     userCorrectAnswers = 0;
     currentNum = 0;
 
-    readonly userAnswer = new FormControl<string>('a');
+    readonly userAnswer = new FormControl<string>('');
     readonly inputQuestionNumber = new FormControl<number | null>(null);
 
     ngOnInit(): void {

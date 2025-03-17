@@ -22,24 +22,19 @@
     </div>
     }
     <div class="answers">
-        <tui-radio-labeled [formControl]="userAnswer" size="m" item="a">
+        @for(item of questionsForShow()?.answers! | keyvalue | randomData; track
+        $index) {
+        <tui-radio-labeled
+            [formControl]="userAnswer"
+            size="m"
+            [item]="item.key"
+        >
             <span
-                [ngClass]="getClass('a', questionsForShow()?.correctAnswer??'')"
-                >a: {{questionsForShow()?.answers?.a}}</span
+                [ngClass]="getClass(item.key, questionsForShow()?.correctAnswer??'')"
+                >{{item.value}}</span
             >
         </tui-radio-labeled>
-        <tui-radio-labeled [formControl]="userAnswer" size="m" item="b">
-            <span
-                [ngClass]="getClass('b', questionsForShow()?.correctAnswer??'')"
-                >b: {{questionsForShow()?.answers?.b}}</span
-            >
-        </tui-radio-labeled>
-        <tui-radio-labeled [formControl]="userAnswer" size="m" item="c">
-            <span
-                [ngClass]="getClass('c', questionsForShow()?.correctAnswer??'')"
-                >c: {{questionsForShow()?.answers?.c}}</span
-            >
-        </tui-radio-labeled>
+        }
     </div>
 
     <div class="buttons-container">
