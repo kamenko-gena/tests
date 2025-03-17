@@ -8,7 +8,7 @@ import {
     signal,
     ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { QuestionInterface } from 'src/app/interfaces/question-interface';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -39,6 +39,7 @@ import { take } from 'rxjs';
         RouterLink,
         TuiCheckboxLabeledModule,
         TuiBadgeModule,
+        NgClass,
     ],
     templateUrl: './exam-area.component.html',
     styleUrl: './exam-area.component.less',
@@ -54,6 +55,7 @@ export class ExamAreaComponent implements OnInit {
     readonly questionsForShow = signal<QuestionInterface | null>(null);
     readonly showErrorExpand = signal<boolean>(false);
     readonly showCorrectExpand = signal<boolean>(false);
+    private showAnswer = false;
     private userQuestionNum = '';
     private userClosedQuestions: string[] = [];
     userCorrectAnswers = 0;
@@ -95,6 +97,7 @@ export class ExamAreaComponent implements OnInit {
     }
 
     answer(correctAnswer: string, questionNum: number): void {
+        this.showAnswer = true;
         this.userAnswer.disable();
         if (this.userAnswer.value !== correctAnswer) {
             this.showErrorExpand.set(true);
@@ -128,6 +131,22 @@ export class ExamAreaComponent implements OnInit {
         }
     }
 
+    getClass(itemName: string, correctAnswer: string): string {
+        if (!this.showAnswer) {
+            return '';
+        }
+        if (itemName === correctAnswer) {
+            return 'correct-answer';
+        }
+        if (
+            this.userAnswer.value !== correctAnswer &&
+            this.userAnswer.value === itemName
+        ) {
+            return 'failed-answer';
+        }
+        return '';
+    }
+
     openResultNotification(content: ElementRef | string): void {
         this.dialogs
             .open(content, {
@@ -139,6 +158,7 @@ export class ExamAreaComponent implements OnInit {
     }
 
     showQuestionByNumber(questionNum: number): void {
+        this.showAnswer = false;
         this.showErrorExpand.set(false);
         this.showCorrectExpand.set(false);
         this.currentNum = questionNum;
@@ -157,6 +177,7 @@ export class ExamAreaComponent implements OnInit {
     }
 
     resetDataQuestions(): void {
+        this.showAnswer = false;
         this.showErrorExpand.set(false);
         this.showCorrectExpand.set(false);
         this.currentNum = 0;
@@ -193,6 +214,7 @@ export class ExamAreaComponent implements OnInit {
             })
             .pipe(take(1))
             .subscribe();
+        this.showQuestionByNumber(this.currentNum);
     }
 
     setQuestionNumber(): void {

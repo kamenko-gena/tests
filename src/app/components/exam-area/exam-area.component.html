@@ -23,13 +23,22 @@
     }
     <div class="answers">
         <tui-radio-labeled [formControl]="userAnswer" size="m" item="a">
-            <span>a: {{questionsForShow()?.answers?.a}}</span>
+            <span
+                [ngClass]="getClass('a', questionsForShow()?.correctAnswer??'')"
+                >a: {{questionsForShow()?.answers?.a}}</span
+            >
         </tui-radio-labeled>
         <tui-radio-labeled [formControl]="userAnswer" size="m" item="b">
-            <span>b: {{questionsForShow()?.answers?.b}}</span>
+            <span
+                [ngClass]="getClass('b', questionsForShow()?.correctAnswer??'')"
+                >b: {{questionsForShow()?.answers?.b}}</span
+            >
         </tui-radio-labeled>
         <tui-radio-labeled [formControl]="userAnswer" size="m" item="c">
-            <span>c: {{questionsForShow()?.answers?.c}}</span>
+            <span
+                [ngClass]="getClass('c', questionsForShow()?.correctAnswer??'')"
+                >c: {{questionsForShow()?.answers?.c}}</span
+            >
         </tui-radio-labeled>
     </div>
 
