@@ -8,4 +8,5 @@ export interface QuestionInterface {
     description: string;
     correctAnswer: string;
     id: string;
+    image?: string;
 }
