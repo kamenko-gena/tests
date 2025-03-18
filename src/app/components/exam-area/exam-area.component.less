@@ -4,6 +4,10 @@
     gap: 1em;
 }
 
+progress {
+    width: 98%;
+}
+
 .progress-bar-block {
     display: flex;
     align-items: center;
@@ -103,4 +107,10 @@
     font-size: large;
     text-align: center;
     background-color: rgba(0, 255, 42, 0.521);
+}
+
+@media (max-width: 800px) {
+    progress {
+        width: 87%;
+    }
 }
