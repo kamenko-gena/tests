@@ -161,6 +161,7 @@ export class ExamAreaComponent implements OnInit {
     }
 
     showQuestionByNumber(questionNum: number): void {
+        this.userAnswer.setValue(null);
         this.showAnswer = false;
         this.showErrorExpand.set(false);
         this.showCorrectExpand.set(false);
@@ -180,6 +181,7 @@ export class ExamAreaComponent implements OnInit {
     }
 
     resetDataQuestions(): void {
+        this.userAnswer.setValue(null);
         this.showAnswer = false;
         this.showErrorExpand.set(false);
         this.showCorrectExpand.set(false);

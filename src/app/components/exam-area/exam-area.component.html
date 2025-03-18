@@ -11,7 +11,13 @@
         </tui-input-number>
     </div>
     <h3>{{questionsForShow()?.question}}</h3>
-    @if(showErrorExpand()) {
+    @if(questionsForShow()?.image) {
+    <img
+        class="question-iamge"
+        src="assets/{{questionsForShow()?.image}}"
+        [alt]="questionsForShow()?.image"
+    />
+    } @if(showErrorExpand()) {
     <div class="error-expand">
         <h5>Неправильно!</h5>
         <p>{{questionsForShow()?.description}}</p>
