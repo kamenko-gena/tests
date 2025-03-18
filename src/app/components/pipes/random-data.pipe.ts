@@ -3,7 +3,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'randomData',
-    pure: false,
     standalone: true,
 })
 export class RandomDataPipe implements PipeTransform {
