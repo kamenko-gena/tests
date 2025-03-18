@@ -1,5 +1,14 @@
 <div class="container">
     @if (questionsForShow()){
+    <div class="progress-bar-block">
+        <progress
+            tuiProgressBar
+            size="s"
+            [value]="userClosedQuestions.length"
+            [max]="allQuestionsData.length"
+        ></progress>
+        <span>{{progressPercent()}}%</span>
+    </div>
     <div class="title-container">
         <p>Вопрос: {{currentNum+1}} из {{allQuestionsData.length}}</p>
         <tui-input-number
@@ -73,7 +82,7 @@
             <button
                 size="m"
                 appearance="accent"
-                [disabled]="userAnswer.status === 'DISABLED'"
+                [disabled]="!userAnswer.value || userAnswer.status === 'DISABLED'"
                 tuiButton
                 (click)="answer((questionsForShow()?.correctAnswer??''), currentNum)"
             >

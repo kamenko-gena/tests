@@ -21,6 +21,7 @@ import {
     TuiBadgeModule,
     TuiCheckboxLabeledModule,
     TuiInputNumberModule,
+    TuiProgressModule,
     TuiRadioLabeledModule,
 } from '@taiga-ui/kit';
 import { RouterLink } from '@angular/router';
@@ -35,6 +36,7 @@ import { RandomDataPipe } from '../pipes/random-data.pipe';
         TuiButtonModule,
         TuiRadioLabeledModule,
         TuiTextfieldControllerModule,
+        TuiProgressModule,
         ReactiveFormsModule,
         TuiInputNumberModule,
         RouterLink,
@@ -60,7 +62,7 @@ export class ExamAreaComponent implements OnInit {
     readonly showCorrectExpand = signal<boolean>(false);
     private showAnswer = false;
     private userQuestionNum = '';
-    private userClosedQuestions: string[] = [];
+    userClosedQuestions: string[] = [];
     userCorrectAnswers = 0;
     currentNum = 0;
 
@@ -233,5 +235,12 @@ export class ExamAreaComponent implements OnInit {
             question = this.allQuestionsData.length;
         }
         this.showQuestionByNumber(question - 1);
+    }
+
+    progressPercent(): number {
+        return Math.round(
+            (this.userClosedQuestions.length * 100) /
+                this.allQuestionsData.length,
+        );
     }
 }
