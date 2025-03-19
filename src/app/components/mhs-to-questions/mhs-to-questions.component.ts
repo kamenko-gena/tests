@@ -22,10 +22,11 @@ import { RouterLink } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MhsToQuestionsComponent implements OnInit {
-    readonly showAllTO = signal<boolean>(false);
+    readonly showQuestions = signal<string | null>(null);
     readonly setLoading = signal<boolean>(false);
     private readonly firebase = inject(FirebaseService);
-    questionsMhsTO: QuestionInterface[] = [];
+    allQuestions: QuestionInterface[] = [];
+    examQuestions: QuestionInterface[] = [];
 
     ngOnInit(): void {
         this.setLoading.set(true);
@@ -33,14 +34,25 @@ export class MhsToQuestionsComponent implements OnInit {
             .getMhsTOQuestions()
             .pipe(take(1))
             .subscribe({
-                next: (next) => (this.questionsMhsTO = next),
+                next: (next) => {
+                    this.allQuestions = next;
+                    this.examQuestions = this.arrayShuffle(next).splice(0, 10);
+                },
                 complete: () => {
                     this.setLoading.set(false);
                 },
             });
     }
 
-    startTOQuestions(): void {
-        this.showAllTO.set(true);
+    arrayShuffle(array: QuestionInterface[]): QuestionInterface[] {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    startQuestions(sectionType: string): void {
+        this.showQuestions.set(sectionType);
     }
 }
