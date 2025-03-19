@@ -213,7 +213,14 @@ export class ExamAreaComponent implements OnInit {
     }
 
     shuffleQuestions(): void {
-        this.allQuestionsData.sort(() => Math.random() - 0.5);
+        for (let i = this.allQuestionsData.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.allQuestionsData[i], this.allQuestionsData[j]] = [
+                this.allQuestionsData[j],
+                this.allQuestionsData[i],
+            ];
+        }
+
         this.alert
             .open('Порядок вопросов изменен!', {
                 label: 'Успешно!',
