@@ -22,6 +22,7 @@ import { RouterLink } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MhsToQuestionsComponent implements OnInit {
+    readonly sectionName = 'TO';
     readonly showQuestions = signal<string | null>(null);
     readonly setLoading = signal<boolean>(false);
     private readonly firebase = inject(FirebaseService);
@@ -36,7 +37,10 @@ export class MhsToQuestionsComponent implements OnInit {
             .subscribe({
                 next: (next) => {
                     this.allQuestions = next;
-                    this.examQuestions = this.arrayShuffle(next).splice(0, 10);
+                    this.examQuestions = this.arrayShuffle([...next]).splice(
+                        0,
+                        10,
+                    );
                 },
                 complete: () => {
                     this.setLoading.set(false);

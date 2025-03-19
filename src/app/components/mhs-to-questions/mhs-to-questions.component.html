@@ -2,7 +2,7 @@
 
 @if(showQuestions()) {
 <app-exam-area
-    sectionName="TO-{{(showQuestions() ?? '' )}}"
+    sectionName="{{sectionName}}-{{(showQuestions() ?? '' )}}"
     [allQuestionsData]="((showQuestions() ?? '' ) === 'exam') ? examQuestions : allQuestions"
 ></app-exam-area>
 } @else {

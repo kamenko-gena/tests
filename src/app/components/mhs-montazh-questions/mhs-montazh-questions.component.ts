@@ -22,10 +22,12 @@ import { RouterLink } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MhsMontazhQuestionsComponent implements OnInit {
-    readonly showAllMontazh = signal<boolean>(false);
+    readonly sectionName = 'montazh';
+    readonly showQuestions = signal<string | null>(null);
     readonly setLoading = signal<boolean>(false);
     private readonly firebase = inject(FirebaseService);
-    questionsMhsMontazh: QuestionInterface[] = [];
+    allQuestions: QuestionInterface[] = [];
+    examQuestions: QuestionInterface[] = [];
 
     ngOnInit(): void {
         this.setLoading.set(true);
@@ -33,14 +35,28 @@ export class MhsMontazhQuestionsComponent implements OnInit {
             .getMhsMontazhQuestions()
             .pipe(take(1))
             .subscribe({
-                next: (next) => (this.questionsMhsMontazh = next),
+                next: (next) => {
+                    this.allQuestions = next;
+                    this.examQuestions = this.arrayShuffle([...next]).splice(
+                        0,
+                        10,
+                    );
+                },
                 complete: () => {
                     this.setLoading.set(false);
                 },
             });
     }
 
-    startMontazhQuestions(): void {
-        this.showAllMontazh.set(true);
+    arrayShuffle(array: QuestionInterface[]): QuestionInterface[] {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    startQuestions(sectionType: string): void {
+        this.showQuestions.set(sectionType);
     }
 }
