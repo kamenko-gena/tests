@@ -88,6 +88,9 @@ export class ExamAreaComponent implements OnInit {
                 this.currentNum.toString(),
             );
         }
+        if (this.sectionName.includes('exam')) {
+            this.resetDataQuestions();
+        }
         this.startExam();
     }
 
@@ -203,17 +206,26 @@ export class ExamAreaComponent implements OnInit {
             this.userClosedQuestions.toString(),
         );
         this.startExam();
-        this.alert
-            .open('Список ваших ответов пуст.', {
-                label: 'Успешно!',
-                status: 'success',
-            })
-            .pipe(take(1))
-            .subscribe();
+        if (!this.sectionName.includes('exam')) {
+            this.alert
+                .open('Список ваших ответов пуст.', {
+                    label: 'Успешно!',
+                    status: 'success',
+                })
+                .pipe(take(1))
+                .subscribe();
+        }
     }
 
     shuffleQuestions(): void {
-        this.allQuestionsData.sort(() => Math.random() - 0.5);
+        for (let i = this.allQuestionsData.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [this.allQuestionsData[i], this.allQuestionsData[j]] = [
+                this.allQuestionsData[j],
+                this.allQuestionsData[i],
+            ];
+        }
+
         this.alert
             .open('Порядок вопросов изменен!', {
                 label: 'Успешно!',
