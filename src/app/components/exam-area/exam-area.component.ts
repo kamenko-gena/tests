@@ -88,6 +88,9 @@ export class ExamAreaComponent implements OnInit {
                 this.currentNum.toString(),
             );
         }
+        if (this.sectionName.includes('exam')) {
+            this.resetDataQuestions();
+        }
         this.startExam();
     }
 
@@ -203,13 +206,15 @@ export class ExamAreaComponent implements OnInit {
             this.userClosedQuestions.toString(),
         );
         this.startExam();
-        this.alert
-            .open('Список ваших ответов пуст.', {
-                label: 'Успешно!',
-                status: 'success',
-            })
-            .pipe(take(1))
-            .subscribe();
+        if (!this.sectionName.includes('exam')) {
+            this.alert
+                .open('Список ваших ответов пуст.', {
+                    label: 'Успешно!',
+                    status: 'success',
+                })
+                .pipe(take(1))
+                .subscribe();
+        }
     }
 
     shuffleQuestions(): void {
