@@ -15,12 +15,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { createErrorHandler, TraceService } from '@sentry/angular';
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyCY43rSuMF90TIkTS_brS2RpUvWeQyjEsg',
-    authDomain: 'mvd-mhs-tests-app.firebaseapp.com',
-    projectId: 'mvd-mhs-tests-app',
-    storageBucket: 'mvd-mhs-tests-app.firebasestorage.app',
-    messagingSenderId: '1004524785744',
-    appId: '1:1004524785744:web:bf918245254c94208a8155',
+    apiKey: '',
+    authDomain: '',
+    projectId: '',
+    storageBucket: 'p',
+    messagingSenderId: '',
+    appId: '',
 };
 
 export const appConfig: ApplicationConfig = {
